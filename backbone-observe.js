@@ -1,10 +1,21 @@
 Backbone.Collection.prototype.observe = function (options) {
 	options = options || {};
 
-	var filter = options.filter || _.identity,
-		map = _.compose(options.map || _.identity, function(model) { return model.toJSON(); }),
-		source = this,
-		destination = options.collection || new source.constructor();
+	var source = this,
+		destination = options.collection || new source.constructor(),
+		filter = options.filter || _.identity,
+		tmpCid,
+		map = _.compose(
+			function (attributes) {
+				var model = new destination.model(attributes);
+				model.cid = tmpCid;
+				return model;
+			},
+			options.map || _.identity,
+			function(model) {
+				tmpCid = model.cid;
+				return model.toJSON(); 
+			});
 
 	function reset() {
 		destination.reset(
@@ -17,7 +28,7 @@ Backbone.Collection.prototype.observe = function (options) {
 		if (evt == 'add' && filter(model)) {
 			destination.add(map(model));
 		} else if (evt == 'remove' || evt == 'change') {
-			var item = destination.get(model.id);
+			var item = destination.getByCid(model.cid);
 			if (item) {
 				if (evt == 'remove' || !filter(model)) {
 					destination.remove(item);
@@ -47,7 +58,7 @@ Backbone.Collection.prototype.observe = function (options) {
 						if (previouslyExcluded) {
 							destination.add(map(model));
 						} else {
-							destination.remove(destination.get(model.id));
+							destination.remove(destination.getByCid(model.cid));
 						}
 					}
 				});

@@ -238,4 +238,16 @@ describe('Backbone-observe', function() {
 			});
 		});
 	});
+
+	describe('new items', function() {
+		it('should forward removals', function() {
+			var doc = new DocumentModel({ name: 'hi' });
+			documents.add(doc);
+			var moreDocs = documents.observe();
+
+			expect(moreDocs.length).toEqual(1);
+			doc.set('id', 42);
+			expect(moreDocs.length).toEqual(1);
+		});
+	});
 });
