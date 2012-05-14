@@ -170,9 +170,7 @@ $(function(){
     changeFilter: function() {
       var value = this.$('input').val();
       this.collection.setFilter(function(todo) {
-		console.log(todo.cid, todo.id, todo.isNew());
         return todo.attributes.title.indexOf(value) > -1;
-        //return !todo.isNew() && todo.attributes.title.indexOf(value) > -1;
       }, {
         reset: false
       });
