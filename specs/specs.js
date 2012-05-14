@@ -240,7 +240,7 @@ describe('Backbone-observe', function() {
 	});
 
 	describe('new items', function() {
-		it('should forward removals', function() {
+		it('should follow models by cid', function() {
 			var doc = new DocumentModel({ name: 'hi' });
 			documents.add(doc);
 			var moreDocs = documents.observe();
