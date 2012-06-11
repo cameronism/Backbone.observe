@@ -250,4 +250,19 @@ describe('Backbone-observe', function() {
 			expect(moreDocs.length).toEqual(1);
 		});
 	});
+
+	describe('setMap', function() {
+		it('should allow the map to be changed', function() {
+			var doc = new DocumentModel({ id: 1, name: 'hi' });
+			documents.add(doc);
+			var moreDocs = documents.observe();
+
+			expect(moreDocs.get(1).get('name')).toEqual('hi');
+			moreDocs.setMap(function(attr) {
+				attr.name += '!';
+				return attr;
+			});
+			expect(moreDocs.get(1).get('name')).toEqual('hi!');
+		});
+	});
 });
