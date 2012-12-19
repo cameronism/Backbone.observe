@@ -34,8 +34,12 @@ console.log(specialDocs.length);
 
 ### map
 
-The `map` function is given a copy of the attributes created with model.toJSON().  
-The attributes are safe to modify and return.
+The `map` function is passed two parameters:
+
+1. A copy of the attributes created with model.toJSON().  
+   These attributes are safe to modify and return.
+
+2. The model from the source collection
 
 ```javascript
 var importantDocs = docs.observe({

@@ -4,7 +4,6 @@ Backbone.Collection.prototype.observe = function (options) {
 	var source = this,
 		destination = options.collection || new source.constructor(),
 		filter = options.filter || _.identity,
-		tmpCid,
 		map;
 
 	function reset() {
@@ -59,17 +58,15 @@ Backbone.Collection.prototype.observe = function (options) {
 			}
 		},
 		setMap: function(newMap) {
-			map = _.compose(
-				function (attributes) {
-					var model = new destination.model(attributes);
-					model.cid = tmpCid;
-					return model;
-				},
-				newMap || _.identity,
-				function(model) {
-					tmpCid = model.cid;
-					return model.toJSON(); 
-				});
+			newMap = newMap || _.identity;
+
+			map = function (model) {
+				var cid = model.cid;
+				model = new destination.model(newMap(model.toJSON(), model));
+				model.cid = cid;
+				return model;
+			};
+
 			reset();
 		}
 	});

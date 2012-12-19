@@ -264,5 +264,40 @@ describe('Backbone-observe', function() {
 			});
 			expect(moreDocs.get(1).get('name')).toEqual('hi!');
 		});
+
+		it('should pass attributes copy as the first argument and Model instance as second argument', function() {
+			var doc = new DocumentModel({ id: 1, name: 'hi' }),
+				recentModel = null;
+
+			documents.add(doc);
+
+			// sanity
+			expect(documents.get(1) instanceof DocumentModel).toBe(true);
+			expect(recentModel instanceof DocumentModel).toBe(false);
+
+			// initial transformation
+			var moreDocs = documents.observe({
+				map: function (attr, model) {
+					recentModel = model;
+					return attr;
+				}
+			});
+
+			// assert
+			expect(recentModel instanceof DocumentModel).toBe(true);
+
+			// reset
+			recentModel = null;
+
+			// second transform
+			moreDocs.setMap(function(attr, model) {
+				recentModel = model;
+				attr.name += '!';
+				return attr;
+			});
+
+			// done
+			expect(recentModel instanceof DocumentModel).toBe(true);
+		});
 	});
 });
