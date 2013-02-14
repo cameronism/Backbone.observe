@@ -17,12 +17,12 @@ Backbone.Collection.prototype.observe = function (options) {
 		if (evt == 'add' && filter(model)) {
 			destination.add(map(model));
 		} else if (evt == 'remove' || evt == 'change') {
-			var item = destination.getByCid(model.cid);
+			var item = destination.get(model.cid);
 			if (item) {
 				if (evt == 'remove' || !filter(model)) {
 					destination.remove(item);
 				} else {
-					item.set(map(model));
+					item.set(map(model).attributes);
 				}
 			} else if (evt == 'change' && filter(model)) {
 				destination.add(map(model));
@@ -47,7 +47,7 @@ Backbone.Collection.prototype.observe = function (options) {
 						if (previouslyExcluded) {
 							destination.add(map(model));
 						} else {
-							destination.remove(destination.getByCid(model.cid));
+							destination.remove(destination.get(model.cid));
 						}
 					}
 				});
